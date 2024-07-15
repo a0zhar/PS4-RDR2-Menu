@@ -1,0 +1,129 @@
+#pragma once
+
+#include "types.h"
+#include <utility>
+
+#define MaxSubmenuLevels 20
+
+typedef void(*Function)();
+typedef void(*KeyboardHandler)(const char *);
+
+class Menu {
+	private:
+	Function mainMenu;
+	Function currentMenu;
+	Function lastSubmenu[MaxSubmenuLevels];
+	int submenuLevel;
+
+	const char *tipText;
+	int currentOption;
+	int optionCount;
+	int lastOption[MaxSubmenuLevels];
+
+	bool optionPress;
+	bool leftPress;
+	bool rightPress;
+	bool leftHold;
+	bool rightHold;
+	bool upPress;
+	bool downPress;
+	bool squarePress;
+
+	int instructionCount;
+	bool setupIntructionsThisFrame;
+	bool xInstruction;
+	bool squareInstruction;
+	bool lrInstruction;
+
+	bool keyboardActive;
+	KeyboardHandler keyboardHandler;
+
+	template <typename T>
+	struct scrollData {
+		T *var;
+		T min;
+		T max;
+		int decimals;
+	};
+	static scrollData<int> intScrollData;
+	static scrollData<float> floatScrollData;
+
+
+
+	enum Alignment { Left, Center, Right };
+
+	static void intScrollKeyboardHandler(const char *text);
+	static void floatScrollKeyboardHandler(const char *text);
+	void playSound(const char *sound, const char *ref = "HUD_PLAYER_MENU");
+	void drawText(const char *text, Vector2 pos, int size, Font font, const char *color, const char *alignment, bool outline);
+	void positionMenuText(const char *text, float xPos, Alignment alignment);
+	void colorEditor();
+
+	bool fastScrolling;
+	bool colorEditing;
+	bool editingAlpha;
+
+	Color *colorToEdit;
+	Function colorChangeCallback;
+
+	public:
+	bool open;
+	bool sounds;
+	bool instructions;
+
+	const char *title;
+	int maxOptions;
+
+	Color bannerColor;
+	Color bannerTextColor;
+	Color optionsActiveColor;
+	Color optionsInactiveColor;
+	Color bodyColor;
+	Color scrollerColor;
+	Color indicatorColor;
+	Color instructionsColor;
+
+	Menu();
+	Menu(Menu &menu);
+	Menu(Function main);
+
+	static void drawCenterNotification(const char *text, int duration = 3000);
+	static void drawFeedNotification(const char *text, const char *subtitle, const char *title = "Menu Base");
+
+	void monitorButtons();
+	void run();
+	void changeSubmenu(Function submenu);
+	void openKeyboard(KeyboardHandler handler, int maxLength, const char *defaultText = "");
+	void banner(const char *text);
+
+	bool hovered();
+	bool pressed();
+	bool scrolled();
+
+	Menu &option(const char *text);
+	void spacer(const char *text);
+	Menu &data(const char *text);
+	Menu &data(bool b);
+	Menu &data(int i);
+	Menu &data(float f, int decimalPlaces);
+
+	Menu &scroller(int *i, int min, int max, bool fast, bool keyboard);
+	Menu &scroller(float *f, float min, float max, float increment, int decimalPlaces, bool fast, bool keyboard);
+	Menu &scroller(const char **textArray, int *index, int numItems, bool fast);
+	Menu &scroller(Font *font);
+
+	Menu &toggle(bool *b);
+	Menu &tip(const char *text);
+	Menu &submenu(Function sub);
+	Menu &keyboard(KeyboardHandler handler, int maxLength, const char *defaultText = "");
+	Menu &editColor(Color *color, bool editAlpha, Function callback = nullptr);
+
+	template<typename F, typename... Args>
+	Menu &call(F func, Args&&... args) {
+		if (pressed()) func(std::forward<Args>(args)...);
+		return *this;
+	}
+
+	Hash vehicleToSpawn;
+	Menu &vehicleSpawn(Hash vehicleHash);
+};
