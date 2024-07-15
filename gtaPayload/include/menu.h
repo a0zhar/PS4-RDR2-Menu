@@ -1,5 +1,6 @@
 #pragma once
-
+#ifndef _MENU_HH
+#define _MENU_HH
 #include "types.h"
 #include <utility>
 
@@ -127,3 +128,4 @@ class Menu {
 	Hash vehicleToSpawn;
 	Menu &vehicleSpawn(Hash vehicleHash);
 };
+#endif
