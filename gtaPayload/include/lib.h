@@ -1,5 +1,6 @@
 #pragma once
-
+#ifndef _LIB_HH
+#define _LIB_HH
 #include "types.h"
 
 extern u64(*syscall)(int num, ...);
@@ -28,3 +29,5 @@ extern int(*atoi)(const char * str);
 extern double(*atof)(const char * str);
 
 extern void initLibs();
+
+#endif
