@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _TYPES_HH
+#define _TYPES_HH
 
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -42,20 +44,36 @@ typedef Any PopZone;
 typedef Any PropSet;
 typedef Any Volume;
 
-typedef struct {
-	float x, y;
+typedef 
+struct VECTOR2_T {
+	float x;
+	float y;
 } Vector2;
 
-typedef struct {
-	float x, _padX, y, _padY, z, _padZ;
+typedef 
+struct VECTOR3_T{
+	float x;
+	float _padX;
+	float y;
+	float _padY;
+	float z;
+	float _padZ;
 } Vector3;
 
-typedef struct {
-	float x, y, z, w;
+typedef 
+struct VECTOR4_T{
+	float x;
+	float y;
+	float z;
+	float w;
 } Vector4;
 
-typedef struct {
-	int r, g, b, a;
+typedef 
+struct COLOR_T {
+	int r;
+	int g;
+	int b;
+	int a;
 } Color;
 
 enum Font {
@@ -849,3 +867,5 @@ enum Buttons {
 	INPUT_SCRIPTED_FLY_ZUP = 0x639b9fc9,
 	INPUT_SCRIPTED_FLY_ZDOWN = 0x9c5e030c,
 };
+
+#endif

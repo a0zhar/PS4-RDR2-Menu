@@ -1,8 +1,7 @@
-#include "lib.h"
+#include "../include/lib.h"
 
 //u64 (*syscall)(int num, ...) = (void*)0x537B964;
-u64 (*syscall)(int num, ...) = (void*)0x6270664;
-// 1.29 = 0x6270664
+u64 (*syscall)(int num, ...) = (void*)0x6270664; // 1.29 = 0x6270664
 #define resolve(module, name) syscall(591, module, #name, &name);
 
 void *(*malloc)(size_t size);

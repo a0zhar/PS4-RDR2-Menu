@@ -1,6 +1,6 @@
-#include "lib.h"
-#include "natives.h"
-#include "menu.h"
+#include "../include/lib.h"
+#include "../include/invoker/natives.h"
+#include "../include/menu.h"
 
 bool init = false;
 int frameCount = 0;
