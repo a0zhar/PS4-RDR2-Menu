@@ -4,7 +4,7 @@
 
 bool init = false;
 int frameCount = 0;
-Menu menu;
+EpineGUI menu;
 
 void mainMenu() {
 	menu.banner("Main Menu");
@@ -16,7 +16,7 @@ void mainMenu() {
 extern "C" void _main(void) {
 	if (!init) {
 		initLibs();
-		menu = Menu(mainMenu);
+		menu = EpineGUI(mainMenu);
 		init = true;
 	}
 

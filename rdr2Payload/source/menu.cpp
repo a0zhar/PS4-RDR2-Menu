@@ -3,9 +3,9 @@
 #include "../include/lib.h"
 #include "../include/fontlist.h"
 
-Menu::Menu() {}
-Menu::Menu(Menu &menu) {}
-Menu::Menu(Function mainSubmenu) {
+EpineGUI::EpineGUI() {}
+EpineGUI::EpineGUI(EpineGUI &menu) {}
+EpineGUI::EpineGUI(Function mainSubmenu) {
 	mainMenu = mainSubmenu;
 	open = false;
 	sounds = true;
@@ -13,14 +13,14 @@ Menu::Menu(Function mainSubmenu) {
 	maxOptions = 15;
 }
 
-void Menu::playSound(const char *sound, const char *ref) {
+void EpineGUI::playSound(const char *sound, const char *ref) {
 	if (sounds) {
 		AUDIO::_STOP_SOUND_WITH_NAME(sound, ref);
 		AUDIO::PLAY_SOUND_FRONTEND(sound, ref, 1, 0);
 	}
 }
 
-void Menu::monitorButtons() {
+void EpineGUI::monitorButtons() {
 	if (open) {
 		PAD::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_UP, true);
 		PAD::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_DOWN, true);
@@ -90,7 +90,7 @@ void Menu::monitorButtons() {
 	}
 }
 
-void Menu::drawText(const char *text, Vector2 pos, int size, Font font, const char *color, const char *alignment, bool outline) {
+void EpineGUI::drawText(const char *text, Vector2 pos, int size, Font font, const char *color, const char *alignment, bool outline) {
 	char buffer[512] = { 0 };
 	sprintf(buffer, "<TEXTFORMAT INDENT='0' LEFTMARGIN='0' RIGHTMARGIN='0' LEADING='0'><FONT FACE='$%s' COLOR='#%s' SIZE='%i'><P ALIGN='%s'>%s</P></FONT></TEXTFORMAT>", fontList[font], color, size, alignment, text);
 
@@ -102,14 +102,14 @@ void Menu::drawText(const char *text, Vector2 pos, int size, Font font, const ch
 	);
 }
 
-void Menu::drawCenterNotification(const char *text, int duration) {
+void EpineGUI::drawCenterNotification(const char *text, int duration) {
 	const char *literalString = MISC::VAR_STRING(10, "LITERAL_STRING", text);
 	UILOG::_UILOG_SET_CACHED_OBJECTIVE(literalString);
 	UILOG::_UILOG_PRINT_CACHED_OBJECTIVE();
 	UILOG::_UILOG_CLEAR_CACHED_OBJECTIVE();
 }
 
-void Menu::run() {
+void EpineGUI::run() {
 	optionCount = 0;
 	tipText = nullptr;
 	setupIntructionsThisFrame = xInstruction = squareInstruction = lrInstruction = false;
@@ -150,7 +150,7 @@ void Menu::run() {
 	}
 }
 
-void Menu::changeSubmenu(Function submenu) {
+void EpineGUI::changeSubmenu(Function submenu) {
 	lastSubmenu[submenuLevel] = currentMenu;
 	lastOption[submenuLevel] = currentOption;
 	currentOption = 1;
@@ -159,15 +159,15 @@ void Menu::changeSubmenu(Function submenu) {
 	submenuLevel++;
 }
 
-void Menu::openKeyboard(KeyboardHandler handler, int maxLength, const char *defaultText) {
+void EpineGUI::openKeyboard(KeyboardHandler handler, int maxLength, const char *defaultText) {
 	MISC::DISPLAY_ONSCREEN_KEYBOARD(0, "FMMC_KEY_TIP8", "", defaultText, "", "", "", maxLength);
 	keyboardHandler = handler;
 	keyboardActive = true;
 }
 
-Menu::scrollData<int> Menu::intScrollData;
-Menu::scrollData<float> Menu::floatScrollData;
-void Menu::intScrollKeyboardHandler(const char *text) {
+EpineGUI::scrollData<int> EpineGUI::intScrollData;
+EpineGUI::scrollData<float> EpineGUI::floatScrollData;
+void EpineGUI::intScrollKeyboardHandler(const char *text) {
 	int i = atoi(text);
 	if (i <= intScrollData.max && i >= intScrollData.min) {
 		*intScrollData.var = i;
@@ -177,7 +177,7 @@ void Menu::intScrollKeyboardHandler(const char *text) {
 		drawCenterNotification(buffer);
 	}
 }
-void Menu::floatScrollKeyboardHandler(const char *text) {
+void EpineGUI::floatScrollKeyboardHandler(const char *text) {
 	float f = (float)atof(text);
 	if (f <= floatScrollData.max && f >= floatScrollData.min) {
 		*floatScrollData.var = f;
@@ -190,10 +190,10 @@ void Menu::floatScrollKeyboardHandler(const char *text) {
 	}
 }
 
-void Menu::banner(const char *text) { title = text; }
-bool Menu::hovered() { return currentOption == optionCount; }
+void EpineGUI::banner(const char *text) { title = text; }
+bool EpineGUI::hovered() { return currentOption == optionCount; }
 
-bool Menu::pressed() {
+bool EpineGUI::pressed() {
 	if (hovered()) {
 		xInstruction = true;
 		if (optionPress)
@@ -202,7 +202,7 @@ bool Menu::pressed() {
 	return false;
 }
 
-bool Menu::scrolled() {
+bool EpineGUI::scrolled() {
 	if (hovered()) {
 		lrInstruction = true;
 		if (rightPress || leftPress || (fastScrolling && rightHold) || (fastScrolling && leftHold))
@@ -211,7 +211,7 @@ bool Menu::scrolled() {
 	return false;
 }
 
-void Menu::positionMenuText(const char *text, float xPos, Alignment alignment) {
+void EpineGUI::positionMenuText(const char *text, float xPos, Alignment alignment) {
 	int optionIndex = 0;
 	if (currentOption <= maxOptions && optionCount <= maxOptions) {
 		optionIndex = optionCount;
@@ -223,13 +223,13 @@ void Menu::positionMenuText(const char *text, float xPos, Alignment alignment) {
 	}
 }
 
-Menu &Menu::option(const char *text) {
+EpineGUI &EpineGUI::option(const char *text) {
 	optionCount++;
 	positionMenuText(text, 0.715f, Left);
 	return *this;
 }
 
-void Menu::spacer(const char *text) {
+void EpineGUI::spacer(const char *text) {
 	char buffer[60] = { 0 };
 	sprintf(buffer, "~italic~%s", text);
 
@@ -242,22 +242,22 @@ void Menu::spacer(const char *text) {
 	}
 }
 
-Menu &Menu::data(const char *text) {
+EpineGUI &EpineGUI::data(const char *text) {
 	positionMenuText(text, 0.935f, Right);
 	return *this;
 }
 
-Menu &Menu::data(bool b) {
+EpineGUI &EpineGUI::data(bool b) {
 	return b ? data("On") : data("Off");
 }
 
-Menu &Menu::data(int i) {
+EpineGUI &EpineGUI::data(int i) {
 	char buffer[30] = { 0 };
 	sprintf(buffer, "%i", i);
 	return data(buffer);
 }
 
-Menu &Menu::data(float f, int decimalPlaces) {
+EpineGUI &EpineGUI::data(float f, int decimalPlaces) {
 	char formatBuffer[10] = { 0 };
 	char dataBuffer[30] = { 0 };
 	sprintf(formatBuffer, "%%.%if", decimalPlaces);
@@ -265,7 +265,7 @@ Menu &Menu::data(float f, int decimalPlaces) {
 	return data(dataBuffer);
 }
 
-Menu &Menu::scroller(int *i, int min, int max, bool fast, bool keyboard) {
+EpineGUI &EpineGUI::scroller(int *i, int min, int max, bool fast, bool keyboard) {
 	if (!hovered()) return data(*i);
 
 	char buffer[30] = { 0 };
@@ -298,7 +298,7 @@ Menu &Menu::scroller(int *i, int min, int max, bool fast, bool keyboard) {
 	return data(buffer);
 }
 
-Menu &Menu::scroller(float *f, float min, float max, float increment, int decimalPlaces, bool fast, bool keyboard) {
+EpineGUI &EpineGUI::scroller(float *f, float min, float max, float increment, int decimalPlaces, bool fast, bool keyboard) {
 	if (!hovered()) return data(*f, decimalPlaces);
 
 	char buffer1[30] = { 0 };
@@ -334,7 +334,7 @@ Menu &Menu::scroller(float *f, float min, float max, float increment, int decima
 
 }
 
-Menu &Menu::scroller(const char **textArray, int *index, int numItems, bool fast) {
+EpineGUI &EpineGUI::scroller(const char **textArray, int *index, int numItems, bool fast) {
 	char buffer[60] = { 0 };
 
 	numItems--;
@@ -365,35 +365,35 @@ Menu &Menu::scroller(const char **textArray, int *index, int numItems, bool fast
 	return data(textArray[*index]);
 }
 
-Menu &Menu::toggle(bool *b) {
+EpineGUI &EpineGUI::toggle(bool *b) {
 	if (pressed())
 		*b = !*b;
 
 	return data(*b);
 }
 
-Menu &Menu::tip(const char *text) {
+EpineGUI &EpineGUI::tip(const char *text) {
 	if (hovered())
 		tipText = text;
 
 	return *this;
 }
 
-Menu &Menu::submenu(Function sub) {
+EpineGUI &EpineGUI::submenu(Function sub) {
 	if (pressed())
 		changeSubmenu(sub);
 
 	return *this;
 }
 
-Menu &Menu::keyboard(KeyboardHandler handler, int maxLength, const char *defaultText) {
+EpineGUI &EpineGUI::keyboard(KeyboardHandler handler, int maxLength, const char *defaultText) {
 	if (pressed())
 		openKeyboard(handler, maxLength, defaultText);
 
 	return *this;
 }
 
-Menu &Menu::vehicleSpawn(Hash vehicleHash) {
+EpineGUI &EpineGUI::vehicleSpawn(Hash vehicleHash) {
 	if (pressed())
 		vehicleToSpawn = vehicleHash;
 

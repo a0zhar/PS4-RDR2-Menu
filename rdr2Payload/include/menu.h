@@ -11,7 +11,7 @@
 typedef void(*Function)();
 typedef void(*KeyboardHandler)(const char *);
 
-class Menu {
+class EpineGUI {
 	private:
 	Function mainMenu;
 	Function currentMenu;
@@ -86,9 +86,9 @@ class Menu {
 	Color indicatorColor;
 	Color instructionsColor;
 
-	Menu();
-	Menu(Menu &menu);
-	Menu(Function main);
+	EpineGUI();
+	EpineGUI(EpineGUI &menu);
+	EpineGUI(Function main);
 
 	static void drawCenterNotification(const char *text, int duration = 3000);
 	static void drawFeedNotification(const char *text, const char *subtitle, const char *title = "Menu Base");
@@ -103,31 +103,31 @@ class Menu {
 	bool pressed();
 	bool scrolled();
 
-	Menu &option(const char *text);
+	EpineGUI &option(const char *text);
 	void spacer(const char *text);
-	Menu &data(const char *text);
-	Menu &data(bool b);
-	Menu &data(int i);
-	Menu &data(float f, int decimalPlaces);
+	EpineGUI &data(const char *text);
+	EpineGUI &data(bool b);
+	EpineGUI &data(int i);
+	EpineGUI &data(float f, int decimalPlaces);
 
-	Menu &scroller(int *i, int min, int max, bool fast, bool keyboard);
-	Menu &scroller(float *f, float min, float max, float increment, int decimalPlaces, bool fast, bool keyboard);
-	Menu &scroller(const char **textArray, int *index, int numItems, bool fast);
-	Menu &scroller(Font *font);
+	EpineGUI &scroller(int *i, int min, int max, bool fast, bool keyboard);
+	EpineGUI &scroller(float *f, float min, float max, float increment, int decimalPlaces, bool fast, bool keyboard);
+	EpineGUI &scroller(const char **textArray, int *index, int numItems, bool fast);
+	EpineGUI &scroller(Font *font);
 
-	Menu &toggle(bool *b);
-	Menu &tip(const char *text);
-	Menu &submenu(Function sub);
-	Menu &keyboard(KeyboardHandler handler, int maxLength, const char *defaultText = "");
-	Menu &editColor(Color *color, bool editAlpha, Function callback = nullptr);
+	EpineGUI &toggle(bool *b);
+	EpineGUI &tip(const char *text);
+	EpineGUI &submenu(Function sub);
+	EpineGUI &keyboard(KeyboardHandler handler, int maxLength, const char *defaultText = "");
+	EpineGUI &editColor(Color *color, bool editAlpha, Function callback = nullptr);
 
 	template<typename F, typename... Args>
-	Menu &call(F func, Args&&... args) {
+	EpineGUI &call(F func, Args&&... args) {
 		if (pressed()) func(std::forward<Args>(args)...);
 		return *this;
 	}
 
 	Hash vehicleToSpawn;
-	Menu &vehicleSpawn(Hash vehicleHash);
+	EpineGUI &vehicleSpawn(Hash vehicleHash);
 };
 #endif
