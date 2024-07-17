@@ -4,6 +4,10 @@ rdr2Payload/build/
 build/*
 build/
 
+# Misc
+.vscode/*
+.vscode/
+
 # Compiled Object files
 *.slo
 *.lo
