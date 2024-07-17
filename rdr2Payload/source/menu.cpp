@@ -90,7 +90,7 @@ void EpineGUI::monitorButtons() {
 	}
 }
 
-void EpineGUI::drawText(const char *text, Vector2 pos, int size, Font font, const char *color, const char *alignment, bool outline) {
+void EpineGUI::drawText(const char *text, EpineVec2 pos, int size, Font font, const char *color, const char *alignment, bool outline) {
 	char buffer[512] = { 0 };
 	sprintf(buffer, "<TEXTFORMAT INDENT='0' LEFTMARGIN='0' RIGHTMARGIN='0' LEADING='0'><FONT FACE='$%s' COLOR='#%s' SIZE='%i'><P ALIGN='%s'>%s</P></FONT></TEXTFORMAT>", fontList[font], color, size, alignment, text);
 
@@ -119,7 +119,7 @@ void EpineGUI::run() {
 	// Draw banner top
 	GRAPHICS::DRAW_RECT(0.825f, 0.1175f, 0.23f, 0.083f, 201, 0, 44, 255, false, true);
 
-	drawText("Test Menu", { 0.660f, 0.1f }, 45, Redemption, "004B93", "CENTER", true);
+	drawText("Test Menu", EpineVec2(0.660f,0.1f), 45, Redemption, "004B93", "CENTER", true);
 
 	// Draw body
 	if (optionCount > maxOptions) {
