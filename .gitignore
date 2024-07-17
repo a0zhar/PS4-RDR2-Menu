@@ -1,0 +1,16 @@
+# Build folders
+rdr2Payload/build/*
+rdr2Payload/build/
+build/*
+build/
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
