@@ -3,7 +3,7 @@
     .type   gtaPayload, @object
     .align  4
 gtaPayload:
-    .incbin "gtaPayload/gtaPayload.bin"
+    .incbin "rdr2Payload/gtaPayload.bin"
 gtaPayloadEnd:
     .global gtaPayloadSize
     .type   gtaPayloadSize, @object
