@@ -67,7 +67,7 @@ private:
 
     // Utility functions for playing sounds and drawing text
     void playSound(const char *sound, const char *ref = "HUD_PLAYER_MENU");
-    void drawText(const char *text, Vector2 pos, int size, Font font, const char *color, const char *alignment, bool outline);
+    void drawText(const char *text, EpineVec2 pos, int size, Font font, const char *color, const char *alignment, bool outline);
     void positionMenuText(const char *text, float xPos, Alignment alignment);
     void colorEditor();
 
