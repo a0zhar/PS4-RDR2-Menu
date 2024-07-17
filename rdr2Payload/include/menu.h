@@ -1,8 +1,9 @@
 #pragma once
 #ifndef _MENU_HH
 #define _MENU_HH
-#include "types.h"
+
 #include <utility>
+#include "types.h"
 
 #define MaxSubmenuLevels 20
 
