@@ -1,25 +1,25 @@
 #include "../include/lib.h"
 
-//u64 (*syscall)(int num, ...) = (void*)0x537B964;
-u64 (*syscall)(int num, ...) = (void*)0x6270664; // 1.29 = 0x6270664
+//uint64_t (*syscall)(int num, ...) = (void*)0x537B964;
+uint64_t (*syscall)(int num, ...) = (void*)0x6270664; // 1.29 = 0x6270664
 #define resolve(module, name) syscall(591, module, #name, &name);
 
-void *(*malloc)(size_t size);
+void *(*malloc)(_size_t size);
 void(*free)(void *ptr);
-void *(*calloc)(size_t num, size_t size);
-void *(*realloc)(void* ptr, size_t size);
-void *(*memset)(void *destination, int value, size_t num);
-void *(*memcpy)(void *destination, const void *source, size_t num);
-int(*memcmp)(const void *s1, const void *s2, size_t n);
+void *(*calloc)(_size_t num, _size_t size);
+void *(*realloc)(void* ptr, _size_t size);
+void *(*memset)(void *destination, int value, _size_t num);
+void *(*memcpy)(void *destination, const void *source, _size_t num);
+int(*memcmp)(const void *s1, const void *s2, _size_t n);
 char *(*strcpy)(char *destination, const char *source);
-char *(*strncpy)(char *destination, const char *source, size_t num);
+char *(*strncpy)(char *destination, const char *source, _size_t num);
 char *(*strcat)(char *dest, const char *src);
-char *(*strncat)(char *dest, const char *src, size_t n);
-size_t(*strlen)(const char *s);
+char *(*strncat)(char *dest, const char *src, _size_t n);
+_size_t(*strlen)(const char *s);
 int(*strcmp)(const char *s1, const char *s2);
-int(*strncmp)(const char *s1, const char *s2, size_t n);
+int(*strncmp)(const char *s1, const char *s2, _size_t n);
 int(*sprintf)(char *str, const char *format, ...);
-int(*snprintf)(char *str, size_t size, const char *format, ...);
+int(*snprintf)(char *str, _size_t size, const char *format, ...);
 int(*sscanf)(const char *str, const char *format, ...);
 char *(*strchr)(const char *s, int c);
 char *(*strrchr)(const char *s, int c);

@@ -1,7 +1,7 @@
 #include "../include/invoker/invoker.h"
 
 NativeArg_s nativeArg;
-u64 args[30];
+uint64_t args[30];
 
 void setVectors() {
 	while (nativeArg.vectorCount) {

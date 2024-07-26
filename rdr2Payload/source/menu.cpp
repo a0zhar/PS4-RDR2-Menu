@@ -3,15 +3,20 @@
 #include "../include/lib.h"
 #include "../include/fontlist.h"
 
+// TODO: Comment this line(s)
+EpineGUI::scrollData<float> EpineGUI::floatScrollData;
+EpineGUI::scrollData<int>   EpineGUI::intScrollData;
+
 EpineGUI::EpineGUI() {}
 EpineGUI::EpineGUI(EpineGUI &menu) {}
 EpineGUI::EpineGUI(Function mainSubmenu) {
 	mainMenu = mainSubmenu;
-	open = false;
-	sounds = true;
+	open         = false;
+	sounds       = true;
 	instructions = true;
 	maxOptions = 15;
 }
+
 
 void EpineGUI::playSound(const char *sound, const char *ref) {
 	if (sounds) {
@@ -47,38 +52,42 @@ void EpineGUI::monitorButtons() {
 			if (currentMenu == mainMenu) {
 				open = false;
 				playSound("MENU_CLOSE");
-			} else {
+			}
+			else {
 				submenuLevel--;
 				currentMenu = lastSubmenu[submenuLevel];
 				currentOption = lastOption[submenuLevel];
-				if (colorEditing) 
+				if (colorEditing)
 					colorEditing = false;
 			}
 			playSound("BACK");
-		} else if (PAD::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_UP)) {
+		}
+		else if (PAD::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_UP)) {
 			upPress = true;
 			currentOption--;
 			if (currentOption < 1) currentOption = optionCount;
 
 			playSound("NAV_UP");
-		} else if (PAD::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_DOWN)) {
+		}
+		else if (PAD::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_DOWN)) {
 			downPress = true;
 			currentOption++;
 			if (currentOption > optionCount)
 				currentOption = 1;
 
 			playSound("NAV_DOWN");
-		} 
+		}
 		else if (PAD::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_RIGHT))   rightPress = true;
 		else if (PAD::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_LEFT))    leftPress = true;
 		else if (PAD::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RIGHT))        rightHold = true;
 		else if (PAD::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_LEFT))         leftHold = true;
 		else if (PAD::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_X))       squarePress = true;
-	    else if (PAD::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_ACCEPT)) {
+		else if (PAD::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_ACCEPT)) {
 			optionPress = true;
 			playSound("SELECT");
 		}
-	} else {
+	}
+	else {
 		if (PAD::IS_CONTROL_PRESSED(0, INPUT_FRONTEND_RB) && PAD::IS_CONTROL_PRESSED(0, INPUT_FRONTEND_RS)) {
 			open = true;
 			optionPress = false;
@@ -125,7 +134,6 @@ void EpineGUI::run() {
 	float MenuOptionX = 0.825f;
 	float BannerHeight = 0.083f;
 	float BannerY = 0.1175f;
-	float IndicatorHeight = 0.005f;
 	float ScrollerOffset = 0.1415f;
 	float UpIndicatorY = 0.159f;
 	float DownIndicatorOffset = 0.161f;
@@ -162,7 +170,8 @@ void EpineGUI::run() {
 		// Draw Down indicator
 		if (currentOption != optionCount)
 			GRAPHICS::DRAW_RECT(MenuOptionX, (totalMaximumOptionsH + 0.161f), IndicatorWidth, IndicatorHeight, 0, 0, 0, 255, false, true);
-	} else {
+	}
+	else {
 		// Define Body height and position, then draw body
 		float bodyHeight = totalOptionsH;
 		float bodyY = (bodyHeight / 2) + 0.159f;
@@ -179,7 +188,8 @@ void EpineGUI::run() {
 		if (keyboardStatus == 1) {
 			keyboardHandler(MISC::GET_ONSCREEN_KEYBOARD_RESULT());
 			keyboardActive = false;
-		} else if (keyboardStatus == 2 || keyboardStatus == 3)
+		}
+		else if (keyboardStatus == 2 || keyboardStatus == 3)
 			keyboardActive = false;
 	}
 }
@@ -199,13 +209,13 @@ void EpineGUI::openKeyboard(KeyboardHandler handler, int maxLength, const char *
 	keyboardActive = true;
 }
 
-EpineGUI::scrollData<int> EpineGUI::intScrollData;
-EpineGUI::scrollData<float> EpineGUI::floatScrollData;
+
 void EpineGUI::intScrollKeyboardHandler(const char *text) {
 	int i = atoi(text);
 	if (i <= intScrollData.max && i >= intScrollData.min) {
 		*intScrollData.var = i;
-	} else {
+	}
+	else {
 		char buffer[70] = { 0 };
 		sprintf(buffer, "~r~Error: input must be between %i and %i", intScrollData.min, intScrollData.max);
 		drawCenterNotification(buffer);
@@ -215,7 +225,8 @@ void EpineGUI::floatScrollKeyboardHandler(const char *text) {
 	float f = (float)atof(text);
 	if (f <= floatScrollData.max && f >= floatScrollData.min) {
 		*floatScrollData.var = f;
-	} else {
+	}
+	else {
 		char buffer1[70] = { 0 };
 		char buffer2[70] = { 0 };
 		sprintf(buffer1, "~r~Error: input must be between %%.%if and %%.%if", floatScrollData.decimals, floatScrollData.decimals);
@@ -224,16 +235,20 @@ void EpineGUI::floatScrollKeyboardHandler(const char *text) {
 	}
 }
 
-void EpineGUI::banner(const char *text) { title = text; }
-bool EpineGUI::hovered() { return currentOption == optionCount; }
+void EpineGUI::banner(const char *text) {
+	title = text;
+}
+bool EpineGUI::hovered() {
+	return currentOption == optionCount;
+}
 
 bool EpineGUI::pressed() {
-	if (hovered()) {
-		xInstruction = true;
-		if (optionPress)
-			return true;
-	}
-	return false;
+	if (!hovered()) 
+		return false;
+
+	xInstruction = true;
+	
+	return optionPress ? true : false;
 }
 
 bool EpineGUI::scrolled() {
@@ -249,7 +264,8 @@ void EpineGUI::positionMenuText(const char *text, float xPos, Alignment alignmen
 	int optionIndex = 0;
 	if (currentOption <= maxOptions && optionCount <= maxOptions) {
 		optionIndex = optionCount;
-	} else if ((optionCount > (currentOption - maxOptions)) && optionCount <= currentOption) {
+	}
+	else if ((optionCount > (currentOption - maxOptions)) && optionCount <= currentOption) {
 		optionIndex = optionCount - (currentOption - maxOptions);
 	}
 	if (optionIndex != 0) {
@@ -294,6 +310,7 @@ EpineGUI &EpineGUI::data(int i) {
 EpineGUI &EpineGUI::data(float f, int decimalPlaces) {
 	char formatBuffer[10] = { 0 };
 	char dataBuffer[30] = { 0 };
+
 	sprintf(formatBuffer, "%%.%if", decimalPlaces);
 	sprintf(dataBuffer, formatBuffer, f);
 	return data(dataBuffer);
@@ -308,11 +325,10 @@ EpineGUI &EpineGUI::scroller(int *i, int min, int max, bool fast, bool keyboard)
 
 	if (rightPress || (rightHold && fast)) {
 		playSound("NAV_RIGHT");
-		// TODO: Comment this line
 		*i = (*i >= max) ? min : (*i + 1);
-	} else if (leftPress || (leftHold && fast)) {
+	}
+	else if (leftPress || (leftHold && fast)) {
 		playSound("NAV_LEFT");
-		// TODO: Comment this line
 		*i = (*i <= min) ? max : (*i - 1);
 	}
 
@@ -340,11 +356,10 @@ EpineGUI &EpineGUI::scroller(float *f, float min, float max, float increment, in
 	fastScrolling = fast;
 
 	if (rightPress || (rightHold && fast)) {
-		// TODO: Comment this line
 		*f = (*f >= max) ? min : (*f + increment);
-	} else if (leftPress || (leftHold && fast)) {
+	}
+	else if (leftPress || (leftHold && fast)) {
 		playSound("NAV_LEFT");
-		// TODO: Comment this line
 		*f = (*f <= min) ? max : (*f - increment);
 	}
 
@@ -369,67 +384,51 @@ EpineGUI &EpineGUI::scroller(float *f, float min, float max, float increment, in
 }
 
 EpineGUI &EpineGUI::scroller(const char **textArray, int *index, int numItems, bool fast) {
-	char buffer[60] = { 0 };
-
 	numItems--;
-	if (hovered()) {
-		lrInstruction = true;
-		fastScrolling = fast;
-		if (rightPress || (rightHold && fast)) {
-			playSound("NAV_RIGHT");
-			if (*index >= numItems) {
-				*index = 0;
-			} else {
-				*index = *index + 1;
-			}
-		} else if (leftPress || (leftHold && fast)) {
-			playSound("NAV_LEFT");
-			if (*index <= 0) {
-				*index = numItems;
-			} else {
-				*index = *index - 1;
-			}
-		}
+	if (!hovered()) return data(textArray[*index]);
+
+	lrInstruction = true;
+	fastScrolling = fast;
+	if (rightPress || (rightHold && fast)) {
+		playSound("NAV_RIGHT");
+		*index = (*index >= numItems) ? 0 : *index + 1;
+	}
+	else if (leftPress || (leftHold && fast)) {
+		playSound("NAV_LEFT");
+		*index = (*index <= 0) ? numItems : *index - 1;
 	}
 
-	if (hovered()) {
-		sprintf(buffer, "&lt; %s &gt;", textArray[*index]);
-		return data(buffer);
-	}
-	return data(textArray[*index]);
+	char buffer[60] = { 0 };
+	sprintf(buffer, "&lt; %s &gt;", textArray[*index]);
+	return data(buffer);
 }
 
 EpineGUI &EpineGUI::toggle(bool *b) {
-	if (pressed())
-		*b = !*b;
+	if (pressed()) *b = !*b;
 
 	return data(*b);
 }
 
 EpineGUI &EpineGUI::tip(const char *text) {
-	if (hovered())
-		tipText = text;
+	if (hovered()) tipText = text;
 
 	return *this;
 }
 
 EpineGUI &EpineGUI::submenu(Function sub) {
-	if (pressed())
-		changeSubmenu(sub);
+	if (pressed()) changeSubmenu(sub);
 
 	return *this;
 }
 
 EpineGUI &EpineGUI::keyboard(KeyboardHandler handler, int maxLength, const char *defaultText) {
-	if (pressed())
-		openKeyboard(handler, maxLength, defaultText);
+	if (pressed()) openKeyboard(handler, maxLength, defaultText);
 
 	return *this;
 }
 
 EpineGUI &EpineGUI::vehicleSpawn(Hash vehicleHash) {
-	if (pressed())
-		vehicleToSpawn = vehicleHash;
+	if (pressed()) vehicleToSpawn = vehicleHash;
 
 	return *this;
 }

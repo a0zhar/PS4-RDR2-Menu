@@ -12,7 +12,7 @@ typedef void(*Function)();
 typedef void(*KeyboardHandler)(const char *);
 
 class EpineGUI {
-	private:
+private:
 	Function mainMenu;
 	Function currentMenu;
 	Function lastSubmenu[MaxSubmenuLevels];
@@ -58,7 +58,7 @@ class EpineGUI {
 	static void intScrollKeyboardHandler(const char *text);
 	static void floatScrollKeyboardHandler(const char *text);
 	void playSound(const char *sound, const char *ref = "HUD_PLAYER_MENU");
-    void drawText(const char *text, EpineVec2 pos, int size, Font font, const char *color, const char *alignment, bool outline);
+	void drawText(const char *text, EpineVec2 pos, int size, Font font, const char *color, const char *alignment, bool outline);
 	void positionMenuText(const char *text, float xPos, Alignment alignment);
 	void colorEditor();
 
@@ -69,7 +69,7 @@ class EpineGUI {
 	Color *colorToEdit;
 	Function colorChangeCallback;
 
-	public:
+public:
 	bool open;
 	bool sounds;
 	bool instructions;
