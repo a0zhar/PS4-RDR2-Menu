@@ -112,30 +112,65 @@ void EpineGUI::drawCenterNotification(const char *text, int duration) {
 void EpineGUI::run() {
 	optionCount = 0;
 	tipText = nullptr;
-	setupIntructionsThisFrame = xInstruction = squareInstruction = lrInstruction = false;
+	setupIntructionsThisFrame = false;
+	xInstruction = false;
+	squareInstruction = false;
+	lrInstruction = false;
 
 	currentMenu();
 
-	// Draw banner top
-	GRAPHICS::DRAW_RECT(0.825f, 0.1175f, 0.23f, 0.083f, 201, 0, 44, 255, false, true);
+	// Constants for drawing
+	float MenuOptionHeight = 20.035f;
+	float MenuOptionWidth = 0.23f;
+	float MenuOptionX = 0.825f;
+	float BannerHeight = 0.083f;
+	float BannerY = 0.1175f;
+	float IndicatorHeight = 0.005f;
+	float ScrollerOffset = 0.1415f;
+	float UpIndicatorY = 0.159f;
+	float DownIndicatorOffset = 0.161f;
 
-	drawText("Test Menu", EpineVec2(0.660f,0.1f), 45, Redemption, "004B93", "CENTER", true);
+	// Calculate heights and widths
+	float totalCurrentOptionsH = currentOption * MenuOptionHeight;
+	float totalMaximumOptionsH = maxOptions * MenuOptionHeight;
+	float totalOptionsH = optionCount * MenuOptionHeight;
+	float ScrollerHeight = MenuOptionHeight;
+	float IndicatorWidth = MenuOptionWidth;
+	float IndicatorHeight = 0.005f;
 
-	// Draw body
+	// Draw banner + banner title
+	GRAPHICS::DRAW_RECT(MenuOptionX, BannerY, MenuOptionWidth, BannerHeight, 201, 0, 44, 255, false, true);
+	drawText("Epine Menu", EpineVec2(0.660f, 0.1f), 45, Redemption, "004B93", "CENTER", true);
+
+
+	// Body and Scroller
 	if (optionCount > maxOptions) {
-		GRAPHICS::DRAW_RECT(0.825f, (((maxOptions * 0.035f) / 2) + 0.159f), 0.23f, (maxOptions * 0.035f), 0, 0, 0, 255, false, true); // Body
-		if (currentOption > maxOptions) {
-			GRAPHICS::DRAW_RECT(0.825f, ((maxOptions * 0.035f) + 0.1415f), 0.23f, 0.035f, 255, 255, 255, 255, false, true); // Scroller
-			GRAPHICS::DRAW_RECT(0.825f, 0.159f, 0.23f, 0.005f, 0, 0, 0, 255, false, true); // Up indicator
-		} else {
-			GRAPHICS::DRAW_RECT(0.825f, ((currentOption * 0.035f) + 0.1415f), 0.23f, 0.035f, 255, 255, 255, 255, false, true); // Scroller
-		}
-		if (currentOption != optionCount) {
-			GRAPHICS::DRAW_RECT(0.825f, ((maxOptions * 0.035f) + 0.161f), 0.23f, 0.005f, 0, 0, 0, 255, false, true); // Down indicator
-		}
+		float bodyHeight = totalMaximumOptionsH;
+		float bodyY = (bodyHeight / 2) + 0.159f;
+		// Calculate Body height and position, then Draw body
+		GRAPHICS::DRAW_RECT(MenuOptionX, bodyY, MenuOptionWidth, bodyHeight, 0, 0, 0, 255, false, true);
+
+		// Calculate/Define Scroller position, then Draw scroller
+		float scrollerY = (currentOption > maxOptions) ? totalMaximumOptionsH : totalCurrentOptionsH;
+		scrollerY += 0.1415f;
+		GRAPHICS::DRAW_RECT(MenuOptionX, scrollerY, MenuOptionWidth, ScrollerHeight, 255, 255, 255, 255, false, true);
+
+		// Draw Up indicator
+		if (currentOption > maxOptions)
+			GRAPHICS::DRAW_RECT(MenuOptionX, 0.159f, IndicatorWidth, IndicatorHeight, 0, 0, 0, 255, false, true);
+
+		// Draw Down indicator
+		if (currentOption != optionCount)
+			GRAPHICS::DRAW_RECT(MenuOptionX, (totalMaximumOptionsH + 0.161f), IndicatorWidth, IndicatorHeight, 0, 0, 0, 255, false, true);
 	} else {
-		GRAPHICS::DRAW_RECT(0.825f, (((optionCount * 0.035f) / 2) + 0.159f), 0.23f, (optionCount * 0.035f), 0, 0, 0, 255, false, true); // Body
-		GRAPHICS::DRAW_RECT(0.825f, ((currentOption * 0.035f) + 0.1415f), 0.23f, 0.035f, 255, 255, 255, 255, false, true); // Scroller
+		// Define Body height and position, then draw body
+		float bodyHeight = totalOptionsH;
+		float bodyY = (bodyHeight / 2) + 0.159f;
+		GRAPHICS::DRAW_RECT(MenuOptionX, bodyY, MenuOptionWidth, bodyHeight, 0, 0, 0, 255, false, true);
+
+		// Define Scroller position, then draw scoller
+		float scrollerY = totalCurrentOptionsH + 0.1415f;
+		GRAPHICS::DRAW_RECT(MenuOptionX, scrollerY, MenuOptionWidth, ScrollerHeight, 255, 255, 255, 255, false, true);
 	}
 
 	// Handle keyboard
@@ -144,9 +179,8 @@ void EpineGUI::run() {
 		if (keyboardStatus == 1) {
 			keyboardHandler(MISC::GET_ONSCREEN_KEYBOARD_RESULT());
 			keyboardActive = false;
-		} else if (keyboardStatus == 2 || keyboardStatus == 3) {
+		} else if (keyboardStatus == 2 || keyboardStatus == 3)
 			keyboardActive = false;
-		}
 	}
 }
 
